@@ -536,6 +536,32 @@ body {
   justify-content: center;
 }
 
+/* 竖版图片：左右布局，和下载色卡保持一致 */
+.palette-card.vertical {
+  display: grid;
+  grid-template-columns: 1fr 170px;
+  grid-template-rows: auto 1fr;
+}
+.palette-card.vertical .palette-card-head {
+  grid-column: 1 / -1;
+}
+.palette-card.vertical .palette-image-wrap {
+  grid-column: 1;
+  grid-row: 2;
+  aspect-ratio: auto;
+  height: 100%;
+  min-height: 320px;
+}
+.palette-card.vertical .palette-swatches {
+  grid-column: 2;
+  grid-row: 2;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  padding: 16px 10px;
+  gap: 6px;
+}
+
 .swatch {
   display: flex;
   flex-direction: column;
@@ -1401,4 +1427,9 @@ body {
   .example-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
   .palette-actions { flex-wrap: wrap; justify-content: center; }
   .palette-actions .btn { flex: 1 1 auto; min-width: 120px; }
+  .palette-card.vertical { grid-template-columns: 1fr 110px; }
+  .palette-card.vertical .palette-image-wrap { min-height: 240px; }
+  .palette-card.vertical .swatch-circle { width: 36px; height: 36px; }
+  .palette-card.vertical .swatch-hex { font-size: 9px; }
+  .palette-card.vertical .swatch-import { font-size: 9px; padding: 2px 6px; }
 }

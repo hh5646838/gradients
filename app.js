@@ -745,6 +745,15 @@
     $('importAllBtn').hidden = false;
     $('paletteMeta').textContent = colors.length + ' Colors';
 
+    // 根据图片方向切换布局（和下载保持一致）
+    const img = state.uploadedImage;
+    const card = $('paletteCard');
+    if (img && img.width <= img.height) {
+      card.classList.add('vertical');
+    } else {
+      card.classList.remove('vertical');
+    }
+
     const swatches = $('paletteSwatches');
     swatches.innerHTML = '';
     colors.forEach(function (c, idx) {
@@ -919,15 +928,14 @@
       else { dh = contentH; dw = dh * imgRatio; dy = contentY; dx = pad + (imgAreaW - dw) / 2; }
       ctx.drawImage(img, dx, dy, dw, dh);
 
-      // 右侧色块区（垂直排列，居中）
+      // 右侧色块区（垂直排列，均匀分布）
       const swatchX = pad + imgAreaW + 40;
       const swatchAreaW = W - pad - swatchX;
       const circleR = 42;
-      const itemH = circleR * 2 + 50;
-      const totalH = itemH * colors.length;
-      const startY = contentY + (contentH - totalH) / 2;
+      const itemH = contentH / colors.length;
+      const startY = contentY + itemH / 2;
       colors.forEach(function (c, i) {
-        const cy = startY + i * itemH + circleR;
+        const cy = startY + i * itemH;
         const cx = swatchX + swatchAreaW / 2;
         ctx.beginPath(); ctx.arc(cx, cy, circleR, 0, Math.PI * 2);
         ctx.fillStyle = c.hex; ctx.fill();
@@ -1550,9 +1558,9 @@
       showToast('请点击右上角 → 在浏览器中打开后下载');
       return;
     }
-    // 夸克浏览器拦截 JS 下载，改为显示图片让用户长按保存
+    // 夸克浏览器拦截 JS 下载，直接提示
     if (/Quark/i.test(ua)) {
-      showImageForSave(canvas, filename);
+      alert('夸克浏览器无法下载图片，请用其他浏览器打开');
       return;
     }
     // 优先用 toBlob + ObjectURL（手机端兼容性更好）
@@ -1574,21 +1582,6 @@
       link.href = canvas.toDataURL('image/png');
       link.click();
     }
-  }
-
-  // 夸克等浏览器：显示图片让用户长按保存
-  function showImageForSave(canvas, filename) {
-    const dataUrl = canvas.toDataURL('image/png');
-    const modal = document.createElement('div');
-    modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:3000;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;';
-    modal.innerHTML =
-      '<p style="color:#fff;font-size:15px;margin-bottom:16px;text-align:center;">长按下方图片 → 保存到相册</p>' +
-      '<img src="' + dataUrl + '" style="max-width:100%;max-height:70vh;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,0.5);">' +
-      '<button style="margin-top:20px;padding:10px 28px;background:#4ecdc4;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;">关闭</button>';
-    modal.querySelector('button').addEventListener('click', function () { document.body.removeChild(modal); });
-    modal.addEventListener('click', function (e) { if (e.target === modal) document.body.removeChild(modal); });
-    document.body.appendChild(modal);
-    showToast('长按图片保存到相册');
   }
 
   /* ========== 预设渐变库 ========== */
