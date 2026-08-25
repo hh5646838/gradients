@@ -1,6 +1,7 @@
 {
   "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=colorstudio",
   "homeUrl": "https://example.com",
+  "moreToolsUrl": "https://www.jojocharm.top/",
   "authorName": "JoJo",
   "wechatName": "JoJo茶酒志",
   "wechatQrUrl": "https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=8&data=https://example.com",

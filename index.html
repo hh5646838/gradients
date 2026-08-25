@@ -19,11 +19,15 @@
         <button class="tab" data-view="extractor" role="tab">色彩提取与色卡</button>
       </nav>
       <div class="nav-right">
-        <button class="help-icon" id="helpBtn" title="帮助说明">?</button>
+        <a class="more-tools-link" id="moreToolsLink" href="#" target="_blank" rel="noopener">
+          <span class="more-tools-icon">🧰</span>
+          <span>更多工具</span>
+        </a>
         <button class="author-btn" id="authorBtn" aria-label="关注我">
           <img id="authorAvatar" class="avatar" src="" alt="作者头像">
           <span class="follow-text">关注我</span>
         </button>
+        <button class="help-icon" id="helpBtn" title="帮助说明">?</button>
       </div>
     </div>
   </header>
@@ -145,7 +149,10 @@
         </div>
 
         <div class="example-section">
-          <h3 class="example-title">精选色卡示例</h3>
+          <div class="example-head">
+            <h3 class="example-title">精选色卡示例</h3>
+            <a class="home-link" id="homeLink" href="#" target="_blank" rel="noopener">前往我的个人主页 →</a>
+          </div>
           <div class="example-grid" id="exampleGrid"></div>
         </div>
       </section>

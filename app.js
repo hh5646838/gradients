@@ -238,6 +238,7 @@
       state.config = {
         avatarUrl: 'https://api.dicebear.com/7.x/avataaars/svg?seed=colorstudio',
         homeUrl: '#',
+        moreToolsUrl: 'https://www.jojocharm.top/',
         authorName: '渐变色实验室',
         wechatName: '公众号',
         wechatQrUrl: 'https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=https://example.com',
@@ -262,6 +263,18 @@
     $('wechatNameDisplay').textContent = cfg.wechatName;
     $('catQr').src = cfg.wechatQrUrl;
     $('footerAuthor').textContent = cfg.authorName;
+    const moreLink = $('moreToolsLink');
+    if (moreLink && cfg.moreToolsUrl) {
+      moreLink.href = cfg.moreToolsUrl;
+    } else if (moreLink) {
+      moreLink.style.display = 'none';
+    }
+    const homeLink = $('homeLink');
+    if (homeLink && cfg.homeUrl) {
+      homeLink.href = cfg.homeUrl;
+    } else if (homeLink) {
+      homeLink.style.display = 'none';
+    }
   }
 
   function renderHelp() {
@@ -329,6 +342,11 @@
       state.extractCache[state.extractMode + '_' + (state.colorCount || 4)] = colors;
       renderPaletteCard(colors);
       showToast('已生成色卡，可点击「全部导入渐变色」');
+      // 滚动到色卡区域，方便手机端查看
+      setTimeout(function () {
+        const area = $('paletteArea');
+        if (area) area.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
     };
     img.onerror = function () {
       showToast('图片加载失败');

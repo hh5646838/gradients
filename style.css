@@ -29,6 +29,8 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
+[hidden] { display: none !important; }
+
 html { scroll-behavior: smooth; }
 
 body {
@@ -130,6 +132,29 @@ body {
   gap: 10px;
   flex-shrink: 0;
 }
+
+.more-tools-link {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: var(--border-light);
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: var(--transition);
+  flex-shrink: 0;
+}
+
+.more-tools-link:hover {
+  background: var(--primary);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.more-tools-icon { font-size: 14px; }
 
 .help-icon {
   width: 34px;
@@ -286,12 +311,20 @@ body {
   margin-bottom: 20px;
 }
 
+.count-control {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
 .count-control label {
-  display: block;
   font-size: 13px;
   font-weight: 600;
   color: var(--text-secondary);
-  margin-bottom: 10px;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .count-row {
@@ -1030,7 +1063,27 @@ body {
   font-size: 15px;
   font-weight: 700;
   color: var(--text);
-  margin: 0 0 16px;
+  margin: 0;
+}
+
+.example-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.home-link {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: var(--transition);
+  white-space: nowrap;
+}
+
+.home-link:hover {
+  color: var(--primary);
 }
 
 .example-grid {
@@ -1319,14 +1372,17 @@ body {
   .nav-inner { padding: 0 14px; gap: 8px; }
   .brand-title { font-size: 14px; }
   .follow-text { display: none; }
+  .more-tools-link span:not(.more-tools-icon) { display: none; }
+  .more-tools-link { padding: 7px 10px; }
   .tab { padding: 6px 10px; font-size: 12px; }
   .container { padding: 20px 14px 60px; }
   .card { padding: 20px 16px; }
   .module-head h2 { font-size: 18px; }
   .gradient-preview { max-height: 220px; }
+  .count-control { flex-direction: column; align-items: stretch; gap: 10px; }
   .count-row { flex-direction: column; gap: 12px; }
   .count-track { width: 100%; max-width: 360px; }
-  .mode-switch { align-self: center; }
+  .mode-switch { align-self: center; margin-left: 0; }
   .stops-list { gap: 8px; }
   .stop-item { padding: 8px 10px; min-height: 44px; }
   .stop-color { width: 36px; height: 36px; }
