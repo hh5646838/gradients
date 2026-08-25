@@ -1766,6 +1766,10 @@
 
   /* ========== 初始化 ========== */
   function init() {
+    // 页面加载即检测夸克浏览器
+    if (/Quark/i.test(navigator.userAgent)) {
+      alert('夸克浏览器无法下载图片，请用其他浏览器打开');
+    }
     loadConfig().then(function () {
       setupRouting();
       setupWechatModal();
