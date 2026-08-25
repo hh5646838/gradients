@@ -1369,16 +1369,20 @@ body {
 
 /* ---------- 响应式 ---------- */
 @media (max-width: 720px) {
-  .nav-inner { padding: 0 14px; gap: 8px; }
+  .nav-inner { flex-wrap: wrap; height: auto; padding: 8px 14px; gap: 8px; }
+  .brand { order: 1; }
+  .nav-right { order: 2; margin-left: auto; }
+  .nav-tabs { order: 3; width: 100%; justify-content: center; margin-top: 4px; padding-bottom: 6px; }
   .brand-title { font-size: 14px; }
   .follow-text { display: none; }
   .more-tools-link span:not(.more-tools-icon) { display: none; }
   .more-tools-link { padding: 7px 10px; }
-  .tab { padding: 6px 10px; font-size: 12px; }
-  .container { padding: 20px 14px 60px; }
+  .tab { padding: 6px 14px; font-size: 13px; }
+  .container { padding: 16px 14px 60px; }
   .card { padding: 20px 16px; }
   .module-head h2 { font-size: 18px; }
-  .gradient-preview { max-height: 220px; }
+  .gradient-preview { max-height: none; }
+  .mesh-blob { filter: blur(40px); }
   .count-control { flex-direction: column; align-items: stretch; gap: 10px; }
   .count-row { flex-direction: column; gap: 12px; }
   .count-track { width: 100%; max-width: 360px; }
