@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>图片色彩提取与高级渐变色生成器</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- 顶部导航栏 -->
+  <header class="nav">
+    <div class="nav-inner">
+      <a class="brand" id="brandLink" href="#">
+        <span class="brand-dot"></span>
+        <span class="brand-title" id="brandTitle">渐变色生成器</span>
+      </a>
+      <nav class="nav-tabs" role="tablist">
+        <button class="tab active" data-view="gradient" role="tab">渐变色生成</button>
+        <button class="tab" data-view="extractor" role="tab">色彩提取与色卡</button>
+      </nav>
+      <div class="nav-right">
+        <button class="help-icon" id="helpBtn" title="帮助说明">?</button>
+        <button class="author-btn" id="authorBtn" aria-label="关注我">
+          <img id="authorAvatar" class="avatar" src="" alt="作者头像">
+          <span class="follow-text">关注我</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- 渐变生成页（默认） -->
+    <section class="view" id="view-gradient">
+      <section class="card module" id="gradientModule">
+        <div class="module-head">
+          <h2>专业多色渐变色编辑器</h2>
+          <p class="module-sub">支持线性 / 径向 / Mesh网格 / 流动 四种渐变，实时预览，一键复制 CSS 或下载高清壁纸。</p>
+        </div>
+
+        <div class="gradient-preview" id="gradientPreview"></div>
+
+        <div class="gradient-controls">
+          <div class="control-group">
+            <label>渐变类型</label>
+            <div class="seg">
+              <button class="seg-btn active" data-type="mesh">网格 Mesh</button>
+              <button class="seg-btn" data-type="linear">线性 Linear</button>
+              <button class="seg-btn" data-type="radial">径向 Radial</button>
+              <button class="seg-btn" data-type="flow">流动 Flow</button>
+            </div>
+          </div>
+          <div class="control-group" id="meshBgGroup" hidden>
+            <label>网格背景</label>
+            <div class="seg">
+              <button class="seg-btn active" data-bg="dark">深色</button>
+              <button class="seg-btn" data-bg="light">浅色</button>
+            </div>
+          </div>
+          <div class="control-group" id="angleGroup">
+            <label for="angleSlider">角度 <span id="angleVal">135°</span></label>
+            <input type="range" id="angleSlider" min="0" max="360" value="135">
+          </div>
+        </div>
+
+        <div class="stops-editor" id="stopsEditor">
+          <div class="stops-head">
+            <span>色阶编辑</span>
+            <div class="stops-head-actions">
+              <button class="btn sm icon-btn" id="undoStopBtn" title="撤销上一步">↩</button>
+              <button class="btn sm icon-btn" id="resetStopBtn" title="重置为默认色">↺</button>
+            </div>
+          </div>
+          <div class="stops-list" id="stopsList"></div>
+        </div>
+
+        <div class="gradient-actions">
+          <button class="btn primary" id="copyCssBtn">复制 CSS 代码</button>
+          <button class="btn" id="downloadWallBtn">下载高清壁纸</button>
+          <button class="btn" id="playToggle" hidden>⏸ 暂停动画</button>
+        </div>
+        <p class="download-hint" id="downloadHint" hidden>动态渐变建议先暂停再下载，画面更稳定</p>
+        <p class="download-hint" id="stopsHint">保持在四个及以下颜色效果会更好</p>
+
+        <div class="presets">
+          <div class="presets-head">
+            <span>预设渐变库</span>
+            <span class="presets-hint">点击小方格立即应用</span>
+          </div>
+          <div class="preset-grid" id="presetGrid"></div>
+        </div>
+      </section>
+    </section>
+
+    <!-- 色彩提取页 -->
+    <section class="view" id="view-extractor" hidden>
+      <section class="card module">
+        <div class="module-head">
+          <h2>图片色彩提取与色卡生成</h2>
+          <p class="module-sub">上传图片，通过色彩聚类算法精准提取主色调，一键生成经典美术色卡。</p>
+        </div>
+
+        <div class="extract-controls">
+          <div class="count-control">
+            <label>提取颜色数量</label>
+            <div class="count-row">
+              <div class="count-track" id="countButtons">
+                <div class="count-track-line"></div>
+                <button class="count-btn" data-value="2">2</button>
+                <button class="count-btn" data-value="3">3</button>
+                <button class="count-btn active" data-value="4">4</button>
+                <button class="count-btn" data-value="5">5</button>
+                <button class="count-btn" data-value="6">6</button>
+              </div>
+              <div class="mode-switch" id="modeSwitch">
+                <button class="mode-btn active" data-mode="vivid">艳丽</button>
+                <button class="mode-btn" data-mode="muted">灰调</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <input type="file" id="imageInput" accept="image/*" hidden>
+
+        <div class="palette-area" id="paletteArea">
+          <div class="empty-hint" id="emptyHint">
+            <div class="empty-icon">🖼️</div>
+            <div>点击或拖拽图片到此处上传</div>
+          </div>
+          <div class="palette-card" id="paletteCard" hidden>
+            <div class="palette-card-head">
+              <span class="palette-title">COLOR PALETTE</span>
+              <span class="palette-meta" id="paletteMeta"></span>
+            </div>
+            <div class="palette-image-wrap">
+              <img id="paletteImage" alt="预览图">
+            </div>
+            <div class="palette-swatches" id="paletteSwatches"></div>
+          </div>
+        </div>
+
+        <div class="palette-actions" id="paletteActions">
+          <button class="btn primary" id="replaceImageBtn">选择图片</button>
+          <button class="btn primary" id="downloadCardBtn" hidden>下载高清色卡</button>
+          <button class="btn" id="importAllBtn" hidden>全部导入渐变色</button>
+        </div>
+
+        <div class="example-section">
+          <h3 class="example-title">精选色卡示例</h3>
+          <div class="example-grid" id="exampleGrid"></div>
+        </div>
+      </section>
+    </section>
+
+    <!-- 帮助页 -->
+    <section class="view" id="view-help" hidden>
+      <div class="card module">
+        <div class="module-head help-head">
+          <h2>帮助说明</h2>
+          <button class="btn sm" id="backFromHelp">← 返回</button>
+        </div>
+        <div class="help-content" id="helpContent"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span id="footerAuthor"></span> · 纯前端独立工具 · 所有处理均在本地完成
+  </footer>
+
+  <!-- 公众号弹窗 -->
+  <div class="modal" id="wechatModal" hidden>
+    <div class="modal-mask"></div>
+    <div class="modal-box">
+      <button class="modal-close" id="wechatClose" aria-label="关闭">×</button>
+      <div class="modal-body">
+        <h3>关注公众号</h3>
+        <p class="modal-text" id="wechatModalText"></p>
+        <img class="qr" id="wechatQr" src="" alt="公众号二维码">
+        <p class="wechat-name" id="wechatNameDisplay"></p>
+        <button class="btn primary" id="copyWechatBtn">一键复制公众号名称</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 猫咪支持弹窗 -->
+  <div class="modal" id="catModal" hidden>
+    <div class="modal-mask"></div>
+    <div class="modal-box cat-box">
+      <div class="cat-emoji">🐱 🥺</div>
+      <p class="cat-text">你的图片已经压缩好啦，阅读广告是网站生存的根本，微信扫描下方二维码阅读并点击文末的广告支持我们吧！当然,你也可以选择残忍关掉弹窗继续免费使用。</p>
+      <img class="qr" id="catQr" src="" alt="公众号二维码">
+      <button class="btn cat-close-btn" id="catCloseBtn" disabled>残忍关掉 (5s)</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" hidden></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
