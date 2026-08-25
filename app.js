@@ -889,41 +889,91 @@
     const img = state.uploadedImage;
     if (!colors.length || !img) return;
 
-    const W = 1080, pad = 60, headerH = 100, imgH = 560, swatchAreaH = 280;
-    const H = pad * 2 + headerH + imgH + swatchAreaH;
-    const canvas = document.createElement('canvas');
-    canvas.width = W; canvas.height = H;
-    const ctx = canvas.getContext('2d');
+    const W = 1080, pad = 60, headerH = 100;
+    const isVertical = img.width <= img.height;
+    let H, canvas, ctx;
 
-    ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, W, H);
-    ctx.strokeStyle = '#e5e7eb'; ctx.lineWidth = 2; ctx.strokeRect(1, 1, W - 2, H - 2);
-    ctx.fillStyle = '#1a1a2e'; ctx.font = 'bold 32px -apple-system, sans-serif'; ctx.textBaseline = 'middle';
-    ctx.fillText('COLOR PALETTE', pad, pad + headerH / 2);
-    ctx.fillStyle = '#9ca3af'; ctx.font = '20px -apple-system, sans-serif'; ctx.textAlign = 'right';
-    ctx.fillText(colors.length + ' Colors', W - pad, pad + headerH / 2);
-    ctx.textAlign = 'left';
+    if (isVertical) {
+      // 竖版图：左右布局，图片在左，色块垂直排列在右
+      H = 1350;
+      canvas = document.createElement('canvas');
+      canvas.width = W; canvas.height = H;
+      ctx = canvas.getContext('2d');
 
-    const imgY = pad + headerH;
-    const imgRatio = img.width / img.height;
-    const areaRatio = (W - pad * 2) / imgH;
-    let dw, dh, dx, dy;
-    if (imgRatio > areaRatio) { dw = W - pad * 2; dh = dw / imgRatio; dx = pad; dy = imgY + (imgH - dh) / 2; }
-    else { dh = imgH; dw = dh * imgRatio; dy = imgY; dx = pad + (W - pad * 2 - dw) / 2; }
-    ctx.drawImage(img, dx, dy, dw, dh);
+      ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, W, H);
+      ctx.strokeStyle = '#e5e7eb'; ctx.lineWidth = 2; ctx.strokeRect(1, 1, W - 2, H - 2);
+      ctx.fillStyle = '#1a1a2e'; ctx.font = 'bold 32px -apple-system, sans-serif'; ctx.textBaseline = 'middle';
+      ctx.fillText('COLOR PALETTE', pad, pad + headerH / 2);
+      ctx.fillStyle = '#9ca3af'; ctx.font = '20px -apple-system, sans-serif'; ctx.textAlign = 'right';
+      ctx.fillText(colors.length + ' Colors', W - pad, pad + headerH / 2);
+      ctx.textAlign = 'left';
 
-    const swatchY = imgY + imgH + 40;
-    const circleR = 42;
-    const gap = colors.length > 1 ? (W - pad * 2 - circleR * 2 * colors.length) / (colors.length - 1) : 0;
-    colors.forEach(function (c, i) {
-      const cx = pad + circleR + i * (circleR * 2 + gap);
-      const cy = swatchY + circleR;
-      ctx.beginPath(); ctx.arc(cx, cy, circleR, 0, Math.PI * 2);
-      ctx.fillStyle = c.hex; ctx.fill();
-      ctx.strokeStyle = 'rgba(0,0,0,0.08)'; ctx.lineWidth = 2; ctx.stroke();
-      ctx.fillStyle = '#6b7280'; ctx.font = 'bold 18px "SF Mono", Consolas, monospace'; ctx.textAlign = 'center';
-      ctx.fillText(c.hex.toUpperCase(), cx, cy + circleR + 36);
-    });
-    ctx.textAlign = 'left';
+      // 左侧图片区
+      const contentY = pad + headerH + 20;
+      const contentH = H - contentY - pad;
+      const imgAreaW = 640;
+      const imgRatio = img.width / img.height;
+      const areaRatio = imgAreaW / contentH;
+      let dw, dh, dx, dy;
+      if (imgRatio > areaRatio) { dw = imgAreaW; dh = dw / imgRatio; dx = pad; dy = contentY + (contentH - dh) / 2; }
+      else { dh = contentH; dw = dh * imgRatio; dy = contentY; dx = pad + (imgAreaW - dw) / 2; }
+      ctx.drawImage(img, dx, dy, dw, dh);
+
+      // 右侧色块区（垂直排列，居中）
+      const swatchX = pad + imgAreaW + 40;
+      const swatchAreaW = W - pad - swatchX;
+      const circleR = 42;
+      const itemH = circleR * 2 + 50;
+      const totalH = itemH * colors.length;
+      const startY = contentY + (contentH - totalH) / 2;
+      colors.forEach(function (c, i) {
+        const cy = startY + i * itemH + circleR;
+        const cx = swatchX + swatchAreaW / 2;
+        ctx.beginPath(); ctx.arc(cx, cy, circleR, 0, Math.PI * 2);
+        ctx.fillStyle = c.hex; ctx.fill();
+        ctx.strokeStyle = 'rgba(0,0,0,0.08)'; ctx.lineWidth = 2; ctx.stroke();
+        ctx.fillStyle = '#6b7280'; ctx.font = 'bold 18px "SF Mono", Consolas, monospace'; ctx.textAlign = 'center';
+        ctx.fillText(c.hex.toUpperCase(), cx, cy + circleR + 30);
+      });
+      ctx.textAlign = 'left';
+    } else {
+      // 横版图：原上下布局，图片在上，色块在下
+      const imgH = 560, swatchAreaH = 280;
+      H = pad * 2 + headerH + imgH + swatchAreaH;
+      canvas = document.createElement('canvas');
+      canvas.width = W; canvas.height = H;
+      ctx = canvas.getContext('2d');
+
+      ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, W, H);
+      ctx.strokeStyle = '#e5e7eb'; ctx.lineWidth = 2; ctx.strokeRect(1, 1, W - 2, H - 2);
+      ctx.fillStyle = '#1a1a2e'; ctx.font = 'bold 32px -apple-system, sans-serif'; ctx.textBaseline = 'middle';
+      ctx.fillText('COLOR PALETTE', pad, pad + headerH / 2);
+      ctx.fillStyle = '#9ca3af'; ctx.font = '20px -apple-system, sans-serif'; ctx.textAlign = 'right';
+      ctx.fillText(colors.length + ' Colors', W - pad, pad + headerH / 2);
+      ctx.textAlign = 'left';
+
+      const imgY = pad + headerH;
+      const imgRatio = img.width / img.height;
+      const areaRatio = (W - pad * 2) / imgH;
+      let dw, dh, dx, dy;
+      if (imgRatio > areaRatio) { dw = W - pad * 2; dh = dw / imgRatio; dx = pad; dy = imgY + (imgH - dh) / 2; }
+      else { dh = imgH; dw = dh * imgRatio; dy = imgY; dx = pad + (W - pad * 2 - dw) / 2; }
+      ctx.drawImage(img, dx, dy, dw, dh);
+
+      const swatchY = imgY + imgH + 40;
+      const circleR = 42;
+      const gap = colors.length > 1 ? (W - pad * 2 - circleR * 2 * colors.length) / (colors.length - 1) : 0;
+      colors.forEach(function (c, i) {
+        const cx = pad + circleR + i * (circleR * 2 + gap);
+        const cy = swatchY + circleR;
+        ctx.beginPath(); ctx.arc(cx, cy, circleR, 0, Math.PI * 2);
+        ctx.fillStyle = c.hex; ctx.fill();
+        ctx.strokeStyle = 'rgba(0,0,0,0.08)'; ctx.lineWidth = 2; ctx.stroke();
+        ctx.fillStyle = '#6b7280'; ctx.font = 'bold 18px "SF Mono", Consolas, monospace'; ctx.textAlign = 'center';
+        ctx.fillText(c.hex.toUpperCase(), cx, cy + circleR + 36);
+      });
+      ctx.textAlign = 'left';
+    }
 
     triggerDownload(canvas, 'color-card');
     incrementProcessCount();
