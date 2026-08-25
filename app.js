@@ -925,10 +925,7 @@
     });
     ctx.textAlign = 'left';
 
-    const link = document.createElement('a');
-    link.download = 'color-card-' + Date.now() + '.png';
-    link.href = canvas.toDataURL('image/png');
-    link.click();
+    triggerDownload(canvas, 'color-card');
     incrementProcessCount();
   }
 
@@ -1496,10 +1493,52 @@
   }
 
   function triggerDownload(canvas, prefix) {
-    const link = document.createElement('a');
-    link.download = prefix + '-' + Date.now() + '.png';
-    link.href = canvas.toDataURL('image/png');
-    link.click();
+    const filename = prefix + '-' + Date.now() + '.png';
+    const ua = navigator.userAgent;
+    // 微信内置浏览器不支持直接下载
+    if (/MicroMessenger/i.test(ua)) {
+      showToast('请点击右上角 → 在浏览器中打开后下载');
+      return;
+    }
+    // 夸克浏览器拦截 JS 下载，改为显示图片让用户长按保存
+    if (/Quark/i.test(ua)) {
+      showImageForSave(canvas, filename);
+      return;
+    }
+    // 优先用 toBlob + ObjectURL（手机端兼容性更好）
+    if (canvas.toBlob) {
+      canvas.toBlob(function (blob) {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.download = filename;
+        link.href = url;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+      }, 'image/png');
+    } else {
+      // 降级用 toDataURL
+      const link = document.createElement('a');
+      link.download = filename;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+  }
+
+  // 夸克等浏览器：显示图片让用户长按保存
+  function showImageForSave(canvas, filename) {
+    const dataUrl = canvas.toDataURL('image/png');
+    const modal = document.createElement('div');
+    modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:3000;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;';
+    modal.innerHTML =
+      '<p style="color:#fff;font-size:15px;margin-bottom:16px;text-align:center;">长按下方图片 → 保存到相册</p>' +
+      '<img src="' + dataUrl + '" style="max-width:100%;max-height:70vh;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,0.5);">' +
+      '<button style="margin-top:20px;padding:10px 28px;background:#4ecdc4;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;">关闭</button>';
+    modal.querySelector('button').addEventListener('click', function () { document.body.removeChild(modal); });
+    modal.addEventListener('click', function (e) { if (e.target === modal) document.body.removeChild(modal); });
+    document.body.appendChild(modal);
+    showToast('长按图片保存到相册');
   }
 
   /* ========== 预设渐变库 ========== */
