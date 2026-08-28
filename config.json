@@ -1,9 +1,9 @@
 {
-  "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=colorstudio",
-  "homeUrl": "https://example.com",
-  "moreToolsUrl": "https://www.jojocharm.top/",
+  "avatarUrl": "https://res.cloudinary.com/vljhnkvn/image/upload/w_303,f_auto,q_auto/v1787087515/logo_jojo.jpg",
+  "homeUrl": "https://hh5646838.github.io",
+  "moreToolsUrl": "https://jojocharm.top/",
   "authorName": "JoJo",
-  "wechatName": "JoJo茶酒志",
+  "wechatName": "JoJo的AI世界",
   "wechatQrUrl": "https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=8&data=https://example.com",
   "helpText": "## 使用说明\n\n### 一、图片色彩提取与色卡\n1. 点击「选择图片」上传一张本地图片。\n2. 拖动滑块选择提取颜色数量（2-6 种），工具会自动通过色彩聚类提取主色调。\n3. 生成的美术色卡包含预览图、圆形色块与 Hex 代码，可点击「下载高清色卡」保存为 PNG。\n4. 每个色块旁的「导入」按钮可将该颜色送入下方渐变色编辑器；「全部导入」则一次性载入整组色卡。\n\n### 二、渐变色编辑器\n1. 支持 2-6 个色阶自由混排，可手动添加、删除、修改颜色。\n2. 切换「线性 / 径向」渐变类型；线性模式下可调节 0°-360° 角度。\n3. 上方大面积显示器实时预览效果。\n4. 「复制 CSS 代码」直接拿到可用的 CSS 渐变语句；「下载高清壁纸」导出 1920×1080 PNG。\n5. 下方预设渐变方格库，点击任意一格立即应用并平滑滚动到预览区。\n\n### 三、其他\n- 所有处理均在本地浏览器完成，图片不会上传到任何服务器。\n- 累计处理次数保存在本地 localStorage，仅用于触发支持弹窗，不涉及隐私。",
   "modalText": "关注公众号，获取更多设计工具、配色灵感与原创教程。",
